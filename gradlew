@@ -1,9 +1,12 @@
-#!/usr/bin/env sh
-if [ ! -d "$HOME/.gradle/wrapper/dists/gradle-8.0-bin" ]; then
-    echo "Downloading Gradle 8.0..."
-    curl -L https://services.gradle.org/distributions/gradle-8.0-bin.zip -o /tmp/gradle-8.0-bin.zip
-    unzip -q /tmp/gradle-8.0-bin.zip -d "$HOME/.gradle/wrapper/dists/"
-    mv "$HOME/.gradle/wrapper/dists/gradle-8.0" "$HOME/.gradle/wrapper/dists/gradle-8.0-bin"
-    rm /tmp/gradle-8.0-bin.zip
+#!/usr/bin/env bash
+
+# Find the Java home
+if [ -z "$JAVA_HOME" ]; then
+    JAVA_HOME=$(dirname $(dirname $(readlink -f $(which java))))
 fi
-exec "$HOME/.gradle/wrapper/dists/gradle-8.0-bin/bin/gradle" "$@"
+
+# Find gradle wrapper jar
+GRADLE_WRAPPER_JAR="$(dirname "$0")/gradle/wrapper/gradle-wrapper.jar"
+
+# Execute gradle
+exec "$JAVA_HOME/bin/java" -jar "$GRADLE_WRAPPER_JAR" "$@"
