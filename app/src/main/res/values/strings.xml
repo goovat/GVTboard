@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">GVTboard</string>
+    <string name="keyboard_settings">Keyboard Settings</string>
+    <string name="theme_store">Theme Store</string>
+    <string name="clipboard">Clipboard</string>
+    <string name="voice_input">Voice Input</string>
+</resources>

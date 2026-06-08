@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <CheckBoxPreference android:key="vibration_enabled"
+        android:title="Vibration"
+        android:summary="Vibrate on key press"
+        android:defaultValue="true"/>
+    <CheckBoxPreference android:key="sound_enabled"
+        android:title="Sound"
+        android:summary="Play sound on key press"
+        android:defaultValue="true"/>
+    <CheckBoxPreference android:key="learning_enabled"
+        android:title="Learning"
+        android:summary="Learn from your typing"
+        android:defaultValue="true"/>
+    <ListPreference android:key="theme"
+        android:title="Theme"
+        android:entries="@array/theme_names"
+        android:entryValues="@array/theme_values"
+        android:defaultValue="dark"/>
+</PreferenceScreen>

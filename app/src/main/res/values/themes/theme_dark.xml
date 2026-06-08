@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.GVTboard.Dark">
+        <item name="keyboardBackground">#1a1a2e</item>
+        <item name="keyBackground">#16213e</item>
+        <item name="keyTextColor">#ffffff</item>
+        <item name="accentColor">#e94560</item>
+    </style>
+</resources>

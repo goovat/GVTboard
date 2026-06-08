@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/keyboard_background">
+    
+    <LinearLayout
+        android:id="@+id/suggestion_bar"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:background="@color/suggestion_bar_bg">
+        
+        <TextView android:id="@+id/suggestion1"
+            android:layout_width="0dp" android:layout_height="match_parent"
+            android:layout_weight="1" android:gravity="center"
+            android:textSize="16sp" android:background="?attr/selectableItemBackground"/>
+        
+        <TextView android:id="@+id/suggestion2"
+            android:layout_width="0dp" android:layout_height="match_parent"
+            android:layout_weight="1" android:gravity="center"
+            android:textSize="16sp" android:background="?attr/selectableItemBackground"/>
+        
+        <TextView android:id="@+id/suggestion3"
+            android:layout_width="0dp" android:layout_height="match_parent"
+            android:layout_weight="1" android:gravity="center"
+            android:textSize="16sp" android:background="?attr/selectableItemBackground"/>
+    </LinearLayout>
+    
+    <com.gvtboard.ui.GVTKeyboardView
+        android:id="@+id/keyboard_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:keyPreviewLayout="@layout/key_preview"
+        android:keyPreviewOffset="12dp"
+        android:keyPreviewHeight="80dp"/>
+</LinearLayout>

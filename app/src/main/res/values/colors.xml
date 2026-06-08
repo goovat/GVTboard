@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="keyboard_background">#1a1a2e</color>
+    <color name="suggestion_bar_bg">#16213e</color>
+    <color name="suggestion_text">#ffffff</color>
+    <color name="key_text">#ffffff</color>
+</resources>
