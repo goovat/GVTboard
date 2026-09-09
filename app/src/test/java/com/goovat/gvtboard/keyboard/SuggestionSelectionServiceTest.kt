@@ -48,6 +48,78 @@ class SuggestionSelectionServiceTest {
     }
 
     @Test
+    fun preservesInitialCapitalizationWhenSelectingSuggestion() {
+        val context =
+            TextEditingContext(
+                textBeforeCursor = "I Wor",
+                selectedText = "",
+                textAfterCursor = ""
+            )
+
+        val target =
+            FakeEditingContextTarget(context)
+
+        val contextService =
+            TextEditingContextService(target)
+
+        val selectionTarget =
+            FakeSuggestionSelectionTarget()
+
+        val service =
+            SuggestionSelectionService(
+                contextService = contextService,
+                currentWordService =
+                    CurrentWordService(contextService),
+                target = selectionTarget
+            )
+
+        val selected =
+            service.select(
+                SuggestionCandidate("world")
+            )
+
+        assertEquals(true, selected)
+        assertEquals("Wor", selectionTarget.currentWord)
+        assertEquals("World", selectionTarget.replacement)
+    }
+
+    @Test
+    fun preservesAllUppercaseWhenSelectingSuggestion() {
+        val context =
+            TextEditingContext(
+                textBeforeCursor = "I WOR",
+                selectedText = "",
+                textAfterCursor = ""
+            )
+
+        val target =
+            FakeEditingContextTarget(context)
+
+        val contextService =
+            TextEditingContextService(target)
+
+        val selectionTarget =
+            FakeSuggestionSelectionTarget()
+
+        val service =
+            SuggestionSelectionService(
+                contextService = contextService,
+                currentWordService =
+                    CurrentWordService(contextService),
+                target = selectionTarget
+            )
+
+        val selected =
+            service.select(
+                SuggestionCandidate("world")
+            )
+
+        assertEquals(true, selected)
+        assertEquals("WOR", selectionTarget.currentWord)
+        assertEquals("WORLD", selectionTarget.replacement)
+    }
+
+    @Test
     fun doesNotReplaceWhenTextIsSelected() {
         val target = FakeSuggestionSelectionTarget()
 

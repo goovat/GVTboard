@@ -3,7 +3,9 @@ package com.goovat.gvtboard.keyboard
 class SuggestionSelectionService(
     private val contextService: TextEditingContextService,
     private val currentWordService: CurrentWordService,
-    private val target: SuggestionSelectionTarget
+    private val target: SuggestionSelectionTarget,
+    private val replacementPolicy: SuggestionReplacementPolicy =
+        SuggestionReplacementPolicy()
 ) : SuggestionSelectionTargetService {
 
     override fun select(
@@ -22,9 +24,15 @@ class SuggestionSelectionService(
             return false
         }
 
+        val replacement =
+            replacementPolicy.replacement(
+                currentWord = currentWord,
+                suggestion = suggestion.text
+            )
+
         target.replaceCurrentWord(
             currentWord = currentWord,
-            replacement = suggestion.text
+            replacement = replacement
         )
 
         return true
