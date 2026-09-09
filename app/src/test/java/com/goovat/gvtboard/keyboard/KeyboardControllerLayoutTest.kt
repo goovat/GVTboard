@@ -38,15 +38,13 @@ class KeyboardControllerLayoutTest {
     }
 
     @org.junit.Test
-    fun shiftDoesNotChangeActiveLayout() {
+    fun shiftChangesActiveLayoutToUppercase() {
         val controller = KeyboardController()
-
-        val before = controller.currentLayout()
 
         controller.handle(KeyAction.Shift)
 
         org.junit.Assert.assertEquals(
-            before,
+            KeyboardLayout.alphabetic(isShifted = true).rows,
             controller.currentLayout()
         )
     }
