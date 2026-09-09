@@ -10,6 +10,7 @@ class KeyboardRowView(
     context: Context,
     row: KeyboardRow,
     onKeyAction: (KeyDefinition) -> Unit,
+    onLongPress: (KeyDefinition) -> Unit = {},
     private val sizingPolicy: KeyboardKeySizingPolicy =
         KeyboardKeySizingPolicy(),
     private val dimensions: KeyboardKeyDimensions =
@@ -31,8 +32,8 @@ class KeyboardRowView(
                 KeyboardKeyView(
                     context = context,
                     keyDefinition = key,
-                    onKeyAction = onKeyAction
-                ),
+                    onKeyAction = onKeyAction,
+                    onLongPress = onLongPress                ),
                 LinearLayout.LayoutParams(
                     0,
                     dimensions.heightDp.dp(context),

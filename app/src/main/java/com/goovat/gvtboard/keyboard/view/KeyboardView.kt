@@ -9,7 +9,8 @@ import com.goovat.gvtboard.keyboard.KeyboardController
 class KeyboardView(
     context: Context,
     private val controller: KeyboardController,
-    private val onKeyAction: (KeyDefinition) -> Unit
+    private val onKeyAction: (KeyDefinition) -> Unit,
+    private val onLongPress: (KeyDefinition) -> Unit = {}
 ) : LinearLayout(context) {
 
     init {
@@ -33,8 +34,8 @@ class KeyboardView(
                 KeyboardRowView(
                     context = context,
                     row = row,
-                    onKeyAction = onKeyAction
-                ),
+                    onKeyAction = onKeyAction,
+                    onLongPress = onLongPress                ),
                 LayoutParams(
                     LayoutParams.MATCH_PARENT,
                     LayoutParams.WRAP_CONTENT
