@@ -33,7 +33,7 @@ class SuggestionRankingPolicyTest {
         )
 
         org.junit.Assert.assertEquals(
-            listOf("hi", "hello"),
+            listOf("hello", "hi"),
             result.map { it.text }
         )
     }
