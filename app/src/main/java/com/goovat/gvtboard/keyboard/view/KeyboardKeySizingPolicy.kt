@@ -13,6 +13,10 @@ class KeyboardKeySizingPolicy {
             KeyAction.Backspace -> 1.25f
             KeyAction.Enter -> 1.25f
             KeyAction.Symbols -> 1.25f
+            KeyAction.CursorLeft -> 1.25f
+            KeyAction.CursorRight -> 1.25f
+            KeyAction.CursorUp -> 1.25f
+            KeyAction.CursorDown -> 1.25f
             is KeyAction.InsertText -> 1.0f
         }
 }

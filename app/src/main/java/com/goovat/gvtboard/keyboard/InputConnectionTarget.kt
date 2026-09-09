@@ -32,4 +32,36 @@ class InputConnectionTarget(
             )
         )
     }
+
+    override fun moveCursorLeft() {
+        sendKeyEvent(KeyEvent.KEYCODE_DPAD_LEFT)
+    }
+
+    override fun moveCursorRight() {
+        sendKeyEvent(KeyEvent.KEYCODE_DPAD_RIGHT)
+    }
+
+    override fun moveCursorUp() {
+        sendKeyEvent(KeyEvent.KEYCODE_DPAD_UP)
+    }
+
+    override fun moveCursorDown() {
+        sendKeyEvent(KeyEvent.KEYCODE_DPAD_DOWN)
+    }
+
+    private fun sendKeyEvent(keyCode: Int) {
+        inputConnection.sendKeyEvent(
+            KeyEvent(
+                KeyEvent.ACTION_DOWN,
+                keyCode
+            )
+        )
+
+        inputConnection.sendKeyEvent(
+            KeyEvent(
+                KeyEvent.ACTION_UP,
+                keyCode
+            )
+        )
+    }
 }
