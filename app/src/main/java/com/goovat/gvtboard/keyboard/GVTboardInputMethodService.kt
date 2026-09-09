@@ -46,6 +46,7 @@ class GVTboardInputMethodService : InputMethodService() {
 
                 if (
                     result?.action == KeyAction.Shift ||
+                    result?.action == KeyAction.CapsLock ||
                     result?.action == KeyAction.Symbols
                 ) {
                     keyboardView?.render()

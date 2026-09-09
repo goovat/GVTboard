@@ -54,6 +54,13 @@ data class KeyboardLayout(
                                 )
                             )
 
+                            add(
+                                KeyDefinition(
+                                    label = "Caps",
+                                    action = KeyAction.CapsLock
+                                )
+                            )
+
                             addAll(
                                 bottomLetters.map { letter ->
                                     KeyDefinition(
