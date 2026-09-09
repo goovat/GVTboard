@@ -4,9 +4,9 @@ class SuggestionSelectionService(
     private val contextService: TextEditingContextService,
     private val currentWordService: CurrentWordService,
     private val target: SuggestionSelectionTarget
-) {
+) : SuggestionSelectionTargetService {
 
-    fun select(
+    override fun select(
         suggestion: SuggestionCandidate
     ): Boolean {
         val context = contextService.read()
