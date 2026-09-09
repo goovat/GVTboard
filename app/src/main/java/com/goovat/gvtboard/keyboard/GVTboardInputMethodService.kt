@@ -2,17 +2,30 @@ package com.goovat.gvtboard.keyboard
 
 import android.inputmethodservice.InputMethodService
 import android.view.View
-import android.widget.TextView
+import com.goovat.gvtboard.keyboard.view.KeyboardView
 
 class GVTboardInputMethodService : InputMethodService() {
 
     private val keyboardController = KeyboardController()
 
+    private var keyboardView: KeyboardView? = null
+
     override fun onCreateInputView(): View {
-        return TextView(this).apply {
-            text = "GVTboard"
-            textSize = 24f
-            setPadding(32, 32, 32, 32)
+        return KeyboardView(
+            context = this,
+            controller = keyboardController,
+            onKeyAction = { keyDefinition ->
+                val result = dispatchKeyAction(keyDefinition.action)
+
+                if (
+                    result?.action == KeyAction.Shift ||
+                    result?.action == KeyAction.Symbols
+                ) {
+                    keyboardView?.render()
+                }
+            }
+        ).also {
+            keyboardView = it
         }
     }
 
