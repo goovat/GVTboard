@@ -8,7 +8,7 @@ import android.view.View
 class InputConnectionTargetTest {
 
     private class FakeInputConnection : BaseInputConnection(
-        null as View?,
+        View(null),
         false
     ) {
 
