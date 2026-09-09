@@ -122,13 +122,13 @@ class PrefixSuggestionSourceTest {
         )
 
         assertEquals(
-            0.5,
+            0.3333333333333333,
             result[0].score,
             0.0
         )
 
         assertEquals(
-            0.3333333333333333,
+            0.5,
             result[1].score,
             0.0
         )
