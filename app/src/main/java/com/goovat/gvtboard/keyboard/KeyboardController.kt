@@ -2,7 +2,8 @@ package com.goovat.gvtboard.keyboard
 
 class KeyboardController(
     private val eventHandler: KeyEventHandler = KeyEventHandler(),
-    private val layoutSelector: KeyboardLayoutSelector = KeyboardLayoutSelector()
+    private val layoutSelector: KeyboardLayoutSelector = KeyboardLayoutSelector(),
+    private val shiftPolicy: KeyboardShiftPolicy = KeyboardShiftPolicy()
 ) {
 
     var state: KeyboardState = KeyboardState()
@@ -10,8 +11,14 @@ class KeyboardController(
 
     fun handle(action: KeyAction): KeyEventResult {
         val result = eventHandler.handle(action, state)
-        state = result.state
-        return result
+
+        state = if (shiftPolicy.shouldConsumeShift(action)) {
+            result.state.disableShift()
+        } else {
+            result.state
+        }
+
+        return result.copy(state = state)
     }
 
     fun currentLayout(): List<KeyboardRow> =
