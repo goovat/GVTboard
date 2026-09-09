@@ -11,6 +11,10 @@ class KeyboardActionDispatcherTest {
         val committedTexts = mutableListOf<String>()
         var backspaceCount = 0
         var enterCount = 0
+        var cursorLeftCount = 0
+        var cursorRightCount = 0
+        var cursorUpCount = 0
+        var cursorDownCount = 0
 
         override fun commitText(text: String) {
             committedTexts += text
@@ -22,6 +26,22 @@ class KeyboardActionDispatcherTest {
 
         override fun sendEnter() {
             enterCount++
+        }
+
+        override fun moveCursorLeft() {
+            cursorLeftCount++
+        }
+
+        override fun moveCursorRight() {
+            cursorRightCount++
+        }
+
+        override fun moveCursorUp() {
+            cursorUpCount++
+        }
+
+        override fun moveCursorDown() {
+            cursorDownCount++
         }
     }
 
@@ -93,6 +113,24 @@ class KeyboardActionDispatcherTest {
         dispatcher.dispatch(KeyAction.Enter)
 
         assertEquals(1, target.enterCount)
+    }
+
+    @Test
+    fun cursorNavigationExecutesAgainstTarget() {
+        val target = FakeInputTarget()
+        val controller = KeyboardController()
+        val executor = KeyActionExecutor(target)
+        val dispatcher = KeyboardActionDispatcher(controller, executor)
+
+        dispatcher.dispatch(KeyAction.CursorLeft)
+        dispatcher.dispatch(KeyAction.CursorRight)
+        dispatcher.dispatch(KeyAction.CursorUp)
+        dispatcher.dispatch(KeyAction.CursorDown)
+
+        assertEquals(1, target.cursorLeftCount)
+        assertEquals(1, target.cursorRightCount)
+        assertEquals(1, target.cursorUpCount)
+        assertEquals(1, target.cursorDownCount)
     }
 
     @Test
