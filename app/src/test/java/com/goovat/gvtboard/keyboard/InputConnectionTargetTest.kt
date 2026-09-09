@@ -51,7 +51,7 @@ class InputConnectionTargetTest {
                         }
                     }
                 }
-            }
+            } as InputConnection
     }
 
     @org.junit.Test
