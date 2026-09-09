@@ -6,7 +6,7 @@ class KeyboardLayoutTest {
     fun alphabeticLayoutHasFourRows() {
         val layout = KeyboardLayout.alphabetic()
 
-        org.junit.Assert.assertEquals(4, layout.rows.size)
+        org.junit.Assert.assertEquals(5, layout.rows.size)
     }
 
     @org.junit.Test
@@ -58,6 +58,28 @@ class KeyboardLayoutTest {
         org.junit.Assert.assertEquals(
             listOf("?123", "Space", "Enter"),
             row.keys.map { it.label }
+        )
+    }
+
+    @org.junit.Test
+    fun cursorRowContainsFourNavigationKeys() {
+        val layout = KeyboardLayout.alphabetic()
+
+        val row = layout.rows[4]
+
+        org.junit.Assert.assertEquals(
+            listOf("←", "↑", "↓", "→"),
+            row.keys.map { it.label }
+        )
+
+        org.junit.Assert.assertEquals(
+            listOf(
+                KeyAction.CursorLeft,
+                KeyAction.CursorUp,
+                KeyAction.CursorDown,
+                KeyAction.CursorRight
+            ),
+            row.keys.map { it.action }
         )
     }
 

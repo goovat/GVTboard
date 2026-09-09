@@ -93,6 +93,26 @@ data class KeyboardLayout(
                                 action = KeyAction.Enter
                             )
                         )
+                    ),
+                    KeyboardRow(
+                        keys = listOf(
+                            KeyDefinition(
+                                label = "←",
+                                action = KeyAction.CursorLeft
+                            ),
+                            KeyDefinition(
+                                label = "↑",
+                                action = KeyAction.CursorUp
+                            ),
+                            KeyDefinition(
+                                label = "↓",
+                                action = KeyAction.CursorDown
+                            ),
+                            KeyDefinition(
+                                label = "→",
+                                action = KeyAction.CursorRight
+                            )
+                        )
                     )
                 )
             )
