@@ -27,5 +27,4 @@ android {
 }
 
 dependencies {
-    testImplementation(kotlin("test"))
 }
