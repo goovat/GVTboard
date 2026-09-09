@@ -9,6 +9,7 @@ class KeyboardKeySizingPolicy {
         when (key.action) {
             KeyAction.Space -> 5.0f
             KeyAction.Shift -> 1.25f
+            KeyAction.CapsLock -> 1.25f
             KeyAction.Backspace -> 1.25f
             KeyAction.Enter -> 1.25f
             KeyAction.Symbols -> 1.25f

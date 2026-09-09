@@ -11,6 +11,7 @@ class KeyActionExecutor(
             KeyAction.Backspace -> inputTarget.deleteBackward()
             KeyAction.Enter -> inputTarget.sendEnter()
             KeyAction.Shift -> Unit
+            KeyAction.CapsLock -> Unit
             KeyAction.Symbols -> Unit
         }
     }
