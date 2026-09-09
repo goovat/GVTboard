@@ -30,15 +30,13 @@ class KeyboardKeyView(
         KeyboardLongPressRepeater(repeatPolicy)
 
     private val longPressRunnable = Runnable {
-        if (
-            longPressDetector.check(
-                SystemClock.uptimeMillis()
-            )
-        ) {
+        val now = SystemClock.uptimeMillis()
+
+        if (longPressDetector.check(now)) {
             onLongPress(keyDefinition)
 
             if (repeatableKeyPolicy.isRepeatable(keyDefinition)) {
-                repeater.start(SystemClock.uptimeMillis())
+                repeater.start(now)
                 post(repeatRunnable)
             }
         }
@@ -57,7 +55,10 @@ class KeyboardKeyView(
             }
 
             if (repeater.isActive()) {
-                postDelayed(this, repeatPolicy.repeatIntervalMs)
+                postDelayed(
+                    this,
+                    repeatPolicy.repeatIntervalMs
+                )
             }
         }
     }
@@ -74,6 +75,7 @@ class KeyboardKeyView(
 
         setOnTouchListener { _, event ->
             when (event.actionMasked) {
+
                 MotionEvent.ACTION_DOWN -> {
                     background = createBackground(
                         appearance.pressedFillColor()
@@ -95,15 +97,19 @@ class KeyboardKeyView(
                     removeCallbacks(longPressRunnable)
                     removeCallbacks(repeatRunnable)
 
-                    val pressEvent = longPressDetector.release()
+                    val wasLongPress =
+                        longPressDetector.check(
+                            SystemClock.uptimeMillis()
+                        )
 
+                    longPressDetector.release()
                     repeater.stop()
 
                     background = createBackground(
                         appearance.normalFillColor()
                     )
 
-                    if (pressEvent == KeyboardPressEvent.Tap) {
+                    if (!wasLongPress) {
                         performClick()
                     }
 
@@ -133,10 +139,16 @@ class KeyboardKeyView(
         }
     }
 
-    private fun createBackground(fillColor: Int): GradientDrawable =
+    private fun createBackground(
+        fillColor: Int
+    ): GradientDrawable =
         GradientDrawable().apply {
             setColor(fillColor)
-            setStroke(1, appearance.strokeColor())
-            cornerRadius = appearance.cornerRadiusPx()
+            setStroke(
+                1,
+                appearance.strokeColor()
+            )
+            cornerRadius =
+                appearance.cornerRadiusPx()
         }
 }
