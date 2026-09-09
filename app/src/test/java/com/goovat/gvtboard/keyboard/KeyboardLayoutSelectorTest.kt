@@ -14,7 +14,7 @@ class KeyboardLayoutSelectorTest {
         val rows = selector.select(state)
 
         org.junit.Assert.assertEquals(
-            KeyboardLayout.alphabetic().rows,
+            KeyboardLayout.alphabetic(isShifted = true).rows,
             rows
         )
     }

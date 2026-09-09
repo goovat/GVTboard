@@ -6,6 +6,8 @@ class KeyboardLayoutSelector {
         if (state.isSymbols) {
             SymbolLayout.standard().rows
         } else {
-            KeyboardLayout.alphabetic().rows
+            KeyboardLayout.alphabetic(
+                isShifted = state.isShifted
+            ).rows
         }
 }

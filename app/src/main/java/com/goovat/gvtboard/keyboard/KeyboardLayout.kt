@@ -6,11 +6,29 @@ data class KeyboardLayout(
 
     companion object {
 
-        fun alphabetic(): KeyboardLayout =
-            KeyboardLayout(
+        fun alphabetic(isShifted: Boolean = false): KeyboardLayout {
+            val letters = if (isShifted) {
+                "QWERTYUIOP"
+            } else {
+                "qwertyuiop"
+            }
+
+            val homeLetters = if (isShifted) {
+                "ASDFGHJKL"
+            } else {
+                "asdfghjkl"
+            }
+
+            val bottomLetters = if (isShifted) {
+                "ZXCVBNM"
+            } else {
+                "zxcvbnm"
+            }
+
+            return KeyboardLayout(
                 rows = listOf(
                     KeyboardRow(
-                        keys = "qwertyuiop".map { letter ->
+                        keys = letters.map { letter ->
                             KeyDefinition(
                                 label = letter.toString(),
                                 action = KeyAction.InsertText(letter.toString())
@@ -18,7 +36,7 @@ data class KeyboardLayout(
                         }
                     ),
                     KeyboardRow(
-                        keys = "asdfghjkl".map { letter ->
+                        keys = homeLetters.map { letter ->
                             KeyDefinition(
                                 label = letter.toString(),
                                 action = KeyAction.InsertText(letter.toString())
@@ -35,7 +53,7 @@ data class KeyboardLayout(
                             )
 
                             addAll(
-                                "zxcvbnm".map { letter ->
+                                bottomLetters.map { letter ->
                                     KeyDefinition(
                                         label = letter.toString(),
                                         action = KeyAction.InsertText(letter.toString())
@@ -69,5 +87,6 @@ data class KeyboardLayout(
                     )
                 )
             )
+        }
     }
 }
