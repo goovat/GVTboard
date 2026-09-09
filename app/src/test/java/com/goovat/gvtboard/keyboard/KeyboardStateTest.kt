@@ -1,66 +1,62 @@
 package com.goovat.gvtboard.keyboard
 
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
-import org.junit.Test
-
 class KeyboardStateTest {
 
-    @Test
+    @org.junit.Test
     fun defaultStateIsAlphabeticAndUnshifted() {
         val state = KeyboardState()
 
-        assertFalse(state.isShifted)
-        assertFalse(state.isSymbols)
+        org.junit.Assert.assertFalse(state.isShifted)
+        org.junit.Assert.assertFalse(state.isSymbols)
     }
 
-    @Test
+    @org.junit.Test
     fun toggleShiftChangesShiftState() {
         val state = KeyboardState()
 
         val shifted = state.toggleShift()
         val unshifted = shifted.toggleShift()
 
-        assertTrue(shifted.isShifted)
-        assertFalse(unshifted.isShifted)
+        org.junit.Assert.assertTrue(shifted.isShifted)
+        org.junit.Assert.assertFalse(unshifted.isShifted)
     }
 
-    @Test
+    @org.junit.Test
     fun toggleSymbolsChangesSymbolState() {
         val state = KeyboardState()
 
         val symbols = state.toggleSymbols()
         val alphabetic = symbols.toggleSymbols()
 
-        assertTrue(symbols.isSymbols)
-        assertFalse(alphabetic.isSymbols)
+        org.junit.Assert.assertTrue(symbols.isSymbols)
+        org.junit.Assert.assertFalse(alphabetic.isSymbols)
     }
 
-    @Test
+    @org.junit.Test
     fun enablingShiftMakesStateShifted() {
         val state = KeyboardState(isShifted = false)
 
-        assertTrue(state.enableShift().isShifted)
+        org.junit.Assert.assertTrue(state.enableShift().isShifted)
     }
 
-    @Test
+    @org.junit.Test
     fun disablingShiftMakesStateUnshifted() {
         val state = KeyboardState(isShifted = true)
 
-        assertFalse(state.disableShift().isShifted)
+        org.junit.Assert.assertFalse(state.disableShift().isShifted)
     }
 
-    @Test
+    @org.junit.Test
     fun enablingSymbolsMakesStateSymbolMode() {
         val state = KeyboardState(isSymbols = false)
 
-        assertTrue(state.enableSymbols().isSymbols)
+        org.junit.Assert.assertTrue(state.enableSymbols().isSymbols)
     }
 
-    @Test
+    @org.junit.Test
     fun disablingSymbolsMakesStateAlphabeticMode() {
         val state = KeyboardState(isSymbols = true)
 
-        assertFalse(state.disableSymbols().isSymbols)
+        org.junit.Assert.assertFalse(state.disableSymbols().isSymbols)
     }
 }
