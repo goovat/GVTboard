@@ -1,126 +1,133 @@
 package com.goovat.gvtboard.keyboard
 
 import android.view.KeyEvent
-import android.view.inputmethod.BaseInputConnection
 import android.view.inputmethod.InputConnection
-import android.view.View
+import java.lang.reflect.Proxy
 
 class InputConnectionTargetTest {
 
-    private class FakeInputConnection : BaseInputConnection(
-        View(null),
-        false
-    ) {
+    private class FakeInputConnection {
 
         val committedTexts = mutableListOf<String>()
         var codePointDeleteCount = 0
         var fallbackDeleteCount = 0
         val keyEvents = mutableListOf<KeyEvent>()
 
-        override fun commitText(
-            text: CharSequence,
-            newCursorPosition: Int
-        ): Boolean {
-            committedTexts += text.toString()
-            return true
-        }
+        val connection: InputConnection =
+            Proxy.newProxyInstance(
+                InputConnection::class.java.classLoader,
+                arrayOf(InputConnection::class.java)
+            ) { _, method, args ->
 
-        override fun deleteSurroundingTextInCodePoints(
-            beforeLength: Int,
-            afterLength: Int
-        ): Boolean {
-            codePointDeleteCount++
-            return true
-        }
+                when (method.name) {
+                    "commitText" -> {
+                        committedTexts += args?.get(0).toString()
+                        true
+                    }
 
-        override fun deleteSurroundingText(
-            beforeLength: Int,
-            afterLength: Int
-        ): Boolean {
-            fallbackDeleteCount++
-            return true
-        }
+                    "deleteSurroundingTextInCodePoints" -> {
+                        codePointDeleteCount++
+                        true
+                    }
 
-        override fun sendKeyEvent(event: KeyEvent): Boolean {
-            keyEvents += event
-            return true
-        }
+                    "deleteSurroundingText" -> {
+                        fallbackDeleteCount++
+                        true
+                    }
+
+                    "sendKeyEvent" -> {
+                        keyEvents += args?.get(0) as KeyEvent
+                        true
+                    }
+
+                    else -> {
+                        when (method.returnType) {
+                            Boolean::class.javaPrimitiveType -> false
+                            Int::class.javaPrimitiveType -> 0
+                            Long::class.javaPrimitiveType -> 0L
+                            Float::class.javaPrimitiveType -> 0.0f
+                            Double::class.javaPrimitiveType -> 0.0
+                            else -> null
+                        }
+                    }
+                }
+            }
     }
 
     @org.junit.Test
     fun commitTextUsesInputConnection() {
-        val inputConnection = FakeInputConnection()
-        val target = InputConnectionTarget(inputConnection)
+        val fake = FakeInputConnection()
+        val target = InputConnectionTarget(fake.connection)
 
         target.commitText("hello")
 
         org.junit.Assert.assertEquals(
             listOf("hello"),
-            inputConnection.committedTexts
+            fake.committedTexts
         )
     }
 
     @org.junit.Test
     fun commitTextPreservesUppercaseText() {
-        val inputConnection = FakeInputConnection()
-        val target = InputConnectionTarget(inputConnection)
+        val fake = FakeInputConnection()
+        val target = InputConnectionTarget(fake.connection)
 
         target.commitText("Q")
 
         org.junit.Assert.assertEquals(
             listOf("Q"),
-            inputConnection.committedTexts
+            fake.committedTexts
         )
     }
 
     @org.junit.Test
     fun deleteBackwardUsesCodePointDeletion() {
-        val inputConnection = FakeInputConnection()
-        val target = InputConnectionTarget(inputConnection)
+        val fake = FakeInputConnection()
+        val target = InputConnectionTarget(fake.connection)
 
         target.deleteBackward()
 
         org.junit.Assert.assertEquals(
             1,
-            inputConnection.codePointDeleteCount
+            fake.codePointDeleteCount
         )
 
         org.junit.Assert.assertEquals(
             0,
-            inputConnection.fallbackDeleteCount
+            fake.fallbackDeleteCount
         )
     }
 
     @org.junit.Test
     fun enterSendsDownAndUpEvents() {
-        val inputConnection = FakeInputConnection()
-        val target = InputConnectionTarget(inputConnection)
+        val fake = FakeInputConnection()
+        val target = InputConnectionTarget(fake.connection)
 
         target.sendEnter()
 
         org.junit.Assert.assertEquals(
             2,
-            inputConnection.keyEvents.size
+            fake.keyEvents.size
         )
 
         org.junit.Assert.assertEquals(
             KeyEvent.ACTION_DOWN,
-            inputConnection.keyEvents[0].action
+            fake.keyEvents[0].action
         )
 
         org.junit.Assert.assertEquals(
             KeyEvent.ACTION_UP,
-            inputConnection.keyEvents[1].action
+            fake.keyEvents[1].action
         )
 
         org.junit.Assert.assertEquals(
             KeyEvent.KEYCODE_ENTER,
-            inputConnection.keyEvents[0].keyCode
+            fake.keyEvents[0].keyCode
         )
 
         org.junit.Assert.assertEquals(
             KeyEvent.KEYCODE_ENTER,
-            inputConnection.keyEvents[1].keyCode
+            fake.keyEvents[1].keyCode
         )
     }
 }
