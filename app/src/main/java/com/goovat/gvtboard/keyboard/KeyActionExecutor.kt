@@ -13,6 +13,10 @@ class KeyActionExecutor(
             KeyAction.Shift -> Unit
             KeyAction.CapsLock -> Unit
             KeyAction.Symbols -> Unit
+            KeyAction.CursorLeft -> inputTarget.moveCursorLeft()
+            KeyAction.CursorRight -> inputTarget.moveCursorRight()
+            KeyAction.CursorUp -> inputTarget.moveCursorUp()
+            KeyAction.CursorDown -> inputTarget.moveCursorDown()
         }
     }
 }

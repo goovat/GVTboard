@@ -15,4 +15,12 @@ sealed interface KeyAction {
     data object CapsLock : KeyAction
 
     data object Symbols : KeyAction
+
+    data object CursorLeft : KeyAction
+
+    data object CursorRight : KeyAction
+
+    data object CursorUp : KeyAction
+
+    data object CursorDown : KeyAction
 }

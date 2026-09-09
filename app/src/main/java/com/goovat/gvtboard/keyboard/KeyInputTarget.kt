@@ -7,4 +7,12 @@ interface KeyInputTarget {
     fun deleteBackward()
 
     fun sendEnter()
+
+    fun moveCursorLeft()
+
+    fun moveCursorRight()
+
+    fun moveCursorUp()
+
+    fun moveCursorDown()
 }
