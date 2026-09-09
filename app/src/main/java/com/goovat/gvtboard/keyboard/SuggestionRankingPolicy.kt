@@ -12,7 +12,11 @@ class SuggestionRankingPolicy(
         candidates: List<SuggestionCandidate>
     ): List<SuggestionCandidate> =
         candidates
-            .distinctBy { it.text }
+            .groupBy { it.text }
+            .values
+            .map { duplicateCandidates ->
+                duplicateCandidates.maxBy { it.score }
+            }
             .sortedByDescending { it.score }
             .take(maxSuggestions)
 }
