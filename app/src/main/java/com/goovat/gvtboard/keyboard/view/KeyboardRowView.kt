@@ -11,7 +11,9 @@ class KeyboardRowView(
     row: KeyboardRow,
     onKeyAction: (KeyDefinition) -> Unit,
     private val sizingPolicy: KeyboardKeySizingPolicy =
-        KeyboardKeySizingPolicy()
+        KeyboardKeySizingPolicy(),
+    private val dimensions: KeyboardKeyDimensions =
+        KeyboardKeyDimensions()
 ) : LinearLayout(context) {
 
     init {
@@ -33,14 +35,14 @@ class KeyboardRowView(
                 ),
                 LinearLayout.LayoutParams(
                     0,
-                    56.dp(context),
+                    dimensions.heightDp.dp(context),
                     sizingPolicy.weight(key)
                 ).apply {
                     setMargins(
-                        3.dp(context),
-                        3.dp(context),
-                        3.dp(context),
-                        3.dp(context)
+                        dimensions.horizontalMarginDp.dp(context),
+                        dimensions.verticalMarginDp.dp(context),
+                        dimensions.horizontalMarginDp.dp(context),
+                        dimensions.verticalMarginDp.dp(context)
                     )
                 }
             )
