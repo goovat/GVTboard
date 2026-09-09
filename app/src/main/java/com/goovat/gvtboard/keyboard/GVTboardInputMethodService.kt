@@ -8,7 +8,28 @@ class GVTboardInputMethodService : InputMethodService() {
 
     private val keyboardController = KeyboardController()
 
+    private val inputLifecycle =
+        KeyboardInputLifecycle(keyboardController)
+
     private var keyboardView: KeyboardView? = null
+
+    override fun onStartInput(
+        attribute: android.view.inputmethod.EditorInfo?,
+        restarting: Boolean
+    ) {
+        super.onStartInput(attribute, restarting)
+
+        inputLifecycle.startInput()
+        keyboardView?.render()
+    }
+
+    override fun onFinishInput() {
+        inputLifecycle.finishInput()
+
+        keyboardView?.render()
+
+        super.onFinishInput()
+    }
 
     override fun onCreateInputView(): View {
         return KeyboardView(
@@ -34,6 +55,7 @@ class GVTboardInputMethodService : InputMethodService() {
 
         val target = InputConnectionTarget(inputConnection)
         val executor = KeyActionExecutor(target)
+
         val dispatcher = KeyboardActionDispatcher(
             controller = keyboardController,
             executor = executor
