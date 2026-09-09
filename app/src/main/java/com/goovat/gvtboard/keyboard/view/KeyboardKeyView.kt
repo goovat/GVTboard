@@ -11,9 +11,25 @@ class KeyboardKeyView(
     context: Context,
     private val keyDefinition: KeyDefinition,
     private val onKeyAction: (KeyDefinition) -> Unit,
+    private val onLongPress: (KeyDefinition) -> Unit = {},
     private val appearance: KeyboardKeyAppearance =
-        KeyboardKeyAppearance()
+        KeyboardKeyAppearance(),
+    private val longPressPolicy: KeyboardLongPressPolicy =
+        KeyboardLongPressPolicy()
 ) : Button(context) {
+
+    private val longPressDetector =
+        KeyboardLongPressDetector(longPressPolicy)
+
+    private val longPressRunnable = Runnable {
+        if (
+            longPressDetector.check(
+                android.os.SystemClock.uptimeMillis()
+            )
+        ) {
+            onLongPress(keyDefinition)
+        }
+    }
 
     init {
         text = keyDefinition.label
@@ -26,30 +42,52 @@ class KeyboardKeyView(
         )
 
         setOnTouchListener { _, event ->
-            when (event.action) {
+            when (event.actionMasked) {
                 MotionEvent.ACTION_DOWN -> {
                     background = createBackground(
                         appearance.pressedFillColor()
                     )
-                    false
+
+                    longPressDetector.pressDown(
+                        android.os.SystemClock.uptimeMillis()
+                    )
+
+                    postDelayed(
+                        longPressRunnable,
+                        longPressPolicy.durationMs
+                    )
+
+                    true
                 }
 
                 MotionEvent.ACTION_UP -> {
+                    removeCallbacks(longPressRunnable)
+
+                    val pressEvent = longPressDetector.release()
+
                     background = createBackground(
                         appearance.normalFillColor()
                     )
-                    performClick()
+
+                    if (pressEvent == KeyboardPressEvent.Tap) {
+                        performClick()
+                    }
+
                     true
                 }
 
                 MotionEvent.ACTION_CANCEL -> {
+                    removeCallbacks(longPressRunnable)
+                    longPressDetector.cancel()
+
                     background = createBackground(
                         appearance.normalFillColor()
                     )
+
                     true
                 }
 
-                else -> false
+                else -> true
             }
         }
 
