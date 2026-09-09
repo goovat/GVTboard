@@ -7,6 +7,10 @@ class KeyActionExecutorTest {
         val committedTexts = mutableListOf<String>()
         var deleteBackwardCount = 0
         var enterCount = 0
+        var cursorLeftCount = 0
+        var cursorRightCount = 0
+        var cursorUpCount = 0
+        var cursorDownCount = 0
 
         override fun commitText(text: String) {
             committedTexts += text
@@ -18,6 +22,22 @@ class KeyActionExecutorTest {
 
         override fun sendEnter() {
             enterCount++
+        }
+
+        override fun moveCursorLeft() {
+            cursorLeftCount++
+        }
+
+        override fun moveCursorRight() {
+            cursorRightCount++
+        }
+
+        override fun moveCursorUp() {
+            cursorUpCount++
+        }
+
+        override fun moveCursorDown() {
+            cursorDownCount++
         }
     }
 
@@ -84,6 +104,22 @@ class KeyActionExecutorTest {
             1,
             target.enterCount
         )
+    }
+
+    @org.junit.Test
+    fun cursorNavigationMovesCursor() {
+        val target = FakeInputTarget()
+        val executor = KeyActionExecutor(target)
+
+        executor.execute(KeyAction.CursorLeft)
+        executor.execute(KeyAction.CursorRight)
+        executor.execute(KeyAction.CursorUp)
+        executor.execute(KeyAction.CursorDown)
+
+        org.junit.Assert.assertEquals(1, target.cursorLeftCount)
+        org.junit.Assert.assertEquals(1, target.cursorRightCount)
+        org.junit.Assert.assertEquals(1, target.cursorUpCount)
+        org.junit.Assert.assertEquals(1, target.cursorDownCount)
     }
 
     @org.junit.Test
