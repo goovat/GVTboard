@@ -14,6 +14,9 @@ class GVTboardInputMethodService : InputMethodService() {
     private val inputLifecycle =
         KeyboardInputLifecycle(keyboardController)
 
+    private val suggestionRefresher =
+        KeyboardSuggestionRefresher()
+
     private var keyboardView: KeyboardView? = null
 
     private var keyboardContainerView:
@@ -32,12 +35,17 @@ class GVTboardInputMethodService : InputMethodService() {
 
         inputLifecycle.startInput()
         keyboardView?.render()
+        refreshSuggestions()
     }
 
     override fun onFinishInput() {
         inputLifecycle.finishInput()
 
         keyboardView?.render()
+
+        keyboardContainerView?.renderSuggestions(
+            SuggestionRowState()
+        )
 
         super.onFinishInput()
     }
@@ -48,18 +56,9 @@ class GVTboardInputMethodService : InputMethodService() {
                 context = this,
                 controller = keyboardController,
                 onKeyAction = { keyDefinition ->
-                    val result =
-                        dispatchKeyAction(
-                            keyDefinition.action
-                        )
-
-                    if (
-                        result?.action == KeyAction.Shift ||
-                        result?.action == KeyAction.CapsLock ||
-                        result?.action == KeyAction.Symbols
-                    ) {
-                        keyboardView?.render()
-                    }
+                    dispatchKeyAction(
+                        keyDefinition.action
+                    )
                 },
                 onLongPress = { keyDefinition ->
                     longPressHandler.handle(keyDefinition)
@@ -79,6 +78,24 @@ class GVTboardInputMethodService : InputMethodService() {
         }
     }
 
+    private fun refreshSuggestions() {
+        val inputConnection =
+            currentInputConnection
+                ?: run {
+                    keyboardContainerView?.renderSuggestions(
+                        SuggestionRowState()
+                    )
+                    return
+                }
+
+        val state =
+            suggestionRefresher.refresh(
+                inputConnection
+            )
+
+        keyboardContainerView?.renderSuggestions(state)
+    }
+
     private fun selectSuggestion(
         suggestion: SuggestionCandidate
     ): Boolean {
@@ -91,22 +108,20 @@ class GVTboardInputMethodService : InputMethodService() {
                 inputConnection
             )
 
+        val contextService =
+            TextEditingContextService(
+                InputConnectionEditingContextTarget(
+                    inputConnection
+                )
+            )
+
         val coordinator =
             SuggestionSelectionCoordinator(
                 SuggestionSelectionService(
-                    contextService =
-                        TextEditingContextService(
-                            InputConnectionEditingContextTarget(
-                                inputConnection
-                            )
-                        ),
+                    contextService = contextService,
                     currentWordService =
                         CurrentWordService(
-                            TextEditingContextService(
-                                InputConnectionEditingContextTarget(
-                                    inputConnection
-                                )
-                            )
+                            contextService
                         ),
                     target = selectionTarget
                 )
@@ -117,7 +132,14 @@ class GVTboardInputMethodService : InputMethodService() {
                 coordinator
             )
 
-        return handler.handle(suggestion)
+        val selected =
+            handler.handle(suggestion)
+
+        if (selected) {
+            refreshSuggestions()
+        }
+
+        return selected
     }
 
     fun dispatchKeyAction(
@@ -139,6 +161,11 @@ class GVTboardInputMethodService : InputMethodService() {
                 executor = executor
             )
 
-        return dispatcher.dispatch(action)
+        val result =
+            dispatcher.dispatch(action)
+
+        refreshSuggestions()
+
+        return result
     }
 }
