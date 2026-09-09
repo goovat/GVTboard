@@ -1,50 +1,39 @@
 package com.goovat.gvtboard.keyboard
 
+import android.view.inputmethod.InputConnection
+import java.lang.reflect.Proxy
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class KeyboardSuggestionRefresherTest {
 
     @Test
-    fun buildsSuggestionsForCurrentWord() {
-        val context =
-            TextEditingContext(
+    fun refreshBuildsSuggestionsForCurrentWord() {
+        val inputConnection =
+            fakeInputConnection(
                 textBeforeCursor = "I wor",
                 selectedText = "",
                 textAfterCursor = ""
             )
 
-        val contextService =
-            TextEditingContextService(
-                FakeEditingContextTarget(context)
-            )
-
-        val currentWordService =
-            CurrentWordService(contextService)
-
-        val registry =
-            SuggestionSourceRegistry(
-                listOf(
-                    PrefixSuggestionSource(
+        val refresher =
+            KeyboardSuggestionRefresher(
+                sourceRegistry =
+                    SuggestionSourceRegistry(
                         listOf(
-                            "world",
-                            "word",
-                            "work"
+                            PrefixSuggestionSource(
+                                listOf(
+                                    "world",
+                                    "word",
+                                    "work"
+                                )
+                            )
                         )
                     )
-                )
-            )
-
-        val service =
-            SuggestionService(
-                contextService = contextService,
-                currentWordService = currentWordService,
-                sourceRegistry = registry
             )
 
         val result =
-            SuggestionRowPolicy()
-                .createState(service.suggest())
+            refresher.refresh(inputConnection)
 
         assertEquals(
             listOf("word", "work", "world"),
@@ -53,24 +42,16 @@ class KeyboardSuggestionRefresherTest {
     }
 
     @Test
-    fun emptyCurrentWordProducesEmptySuggestionRow() {
-        val context =
-            TextEditingContext(
+    fun refreshReturnsEmptyRowForEmptyCurrentWord() {
+        val inputConnection =
+            fakeInputConnection(
                 textBeforeCursor = "I ",
                 selectedText = "",
                 textAfterCursor = ""
             )
 
-        val contextService =
-            TextEditingContextService(
-                FakeEditingContextTarget(context)
-            )
-
-        val service =
-            SuggestionService(
-                contextService = contextService,
-                currentWordService =
-                    CurrentWordService(contextService),
+        val refresher =
+            KeyboardSuggestionRefresher(
                 sourceRegistry =
                     SuggestionSourceRegistry(
                         listOf(
@@ -82,8 +63,7 @@ class KeyboardSuggestionRefresherTest {
             )
 
         val result =
-            SuggestionRowPolicy()
-                .createState(service.suggest())
+            refresher.refresh(inputConnection)
 
         assertEquals(
             emptyList<SuggestionCandidate>(),
@@ -91,23 +71,50 @@ class KeyboardSuggestionRefresherTest {
         )
     }
 
-    private class FakeEditingContextTarget(
-        private val context: TextEditingContext
-    ) : TextEditingContextTarget {
+    private fun fakeInputConnection(
+        textBeforeCursor: String,
+        selectedText: String,
+        textAfterCursor: String
+    ): InputConnection =
+        Proxy.newProxyInstance(
+            InputConnection::class.java.classLoader,
+            arrayOf(InputConnection::class.java)
+        ) { _, method, _ ->
+            when (method.name) {
+                "getTextBeforeCursor" ->
+                    textBeforeCursor
 
-        override fun getTextBeforeCursor(
-            maxChars: Int
-        ): String =
-            context.textBeforeCursor
+                "getSelectedText" ->
+                    selectedText
 
-        override fun getSelectedText(
-            maxChars: Int
-        ): String =
-            context.selectedText
+                "getTextAfterCursor" ->
+                    textAfterCursor
 
-        override fun getTextAfterCursor(
-            maxChars: Int
-        ): String =
-            context.textAfterCursor
-    }
+                else ->
+                    defaultValue(method.returnType)
+            }
+        } as InputConnection
+
+    private fun defaultValue(
+        returnType: Class<*>
+    ): Any? =
+        when (returnType) {
+            Boolean::class.javaPrimitiveType ->
+                false
+
+            Int::class.javaPrimitiveType ->
+                0
+
+            Long::class.javaPrimitiveType ->
+                0L
+
+            Float::class.javaPrimitiveType ->
+                0f
+
+            Double::class.javaPrimitiveType ->
+                0.0
+
+            else ->
+                null
+        }
 }

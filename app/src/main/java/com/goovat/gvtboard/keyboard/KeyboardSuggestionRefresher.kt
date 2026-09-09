@@ -2,7 +2,20 @@ package com.goovat.gvtboard.keyboard
 
 import android.view.inputmethod.InputConnection
 
-class KeyboardSuggestionRefresher {
+class KeyboardSuggestionRefresher(
+    private val sourceRegistry: SuggestionSourceRegistry =
+        SuggestionSourceRegistry(
+            listOf(
+                PrefixSuggestionSource(
+                    DefaultSuggestionDictionary.words
+                )
+            )
+        ),
+    private val rankingPolicy: SuggestionRankingPolicy =
+        SuggestionRankingPolicy(),
+    private val rowPolicy: SuggestionRowPolicy =
+        SuggestionRowPolicy()
+) {
 
     fun refresh(
         inputConnection: InputConnection
@@ -22,26 +35,16 @@ class KeyboardSuggestionRefresher {
                 contextService
             )
 
-        val sourceRegistry =
-            SuggestionSourceRegistry(
-                listOf(
-                    PrefixSuggestionSource(
-                        DefaultSuggestionDictionary.words
-                    )
-                )
-            )
-
         val suggestionService =
             SuggestionService(
                 contextService = contextService,
                 currentWordService = currentWordService,
-                sourceRegistry = sourceRegistry
+                sourceRegistry = sourceRegistry,
+                rankingPolicy = rankingPolicy
             )
 
-        val suggestions =
+        return rowPolicy.createState(
             suggestionService.suggest()
-
-        return SuggestionRowPolicy()
-            .createState(suggestions)
+        )
     }
 }
