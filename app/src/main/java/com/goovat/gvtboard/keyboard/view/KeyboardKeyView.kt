@@ -13,6 +13,7 @@ class KeyboardKeyView(
     private val keyDefinition: KeyDefinition,
     private val onKeyAction: (KeyDefinition) -> Unit,
     private val onLongPress: (KeyDefinition) -> Unit = {},
+    private val isActive: Boolean = false,
     private val appearance: KeyboardKeyAppearance =
         KeyboardKeyAppearance(),
     private val longPressPolicy: KeyboardLongPressPolicy =
@@ -70,7 +71,11 @@ class KeyboardKeyView(
         textSize = 16f
 
         background = createBackground(
-            appearance.normalFillColor()
+            if (isActive) {
+                appearance.pressedFillColor()
+            } else {
+                appearance.normalFillColor()
+            }
         )
 
         setOnTouchListener { _, event ->

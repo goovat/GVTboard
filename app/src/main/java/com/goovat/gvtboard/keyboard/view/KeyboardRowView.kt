@@ -3,13 +3,16 @@ package com.goovat.gvtboard.keyboard.view
 import android.content.Context
 import android.view.Gravity
 import android.widget.LinearLayout
+import com.goovat.gvtboard.keyboard.KeyAction
 import com.goovat.gvtboard.keyboard.KeyDefinition
+import com.goovat.gvtboard.keyboard.KeyboardState
 import com.goovat.gvtboard.keyboard.KeyboardRow
 
 class KeyboardRowView(
     context: Context,
     row: KeyboardRow,
     onKeyAction: (KeyDefinition) -> Unit,
+    private val keyboardState: KeyboardState = KeyboardState(),
     onLongPress: (KeyDefinition) -> Unit = {},
     private val sizingPolicy: KeyboardKeySizingPolicy =
         KeyboardKeySizingPolicy(),
