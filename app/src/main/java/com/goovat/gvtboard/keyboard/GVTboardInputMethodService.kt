@@ -2,7 +2,9 @@ package com.goovat.gvtboard.keyboard
 
 import android.inputmethodservice.InputMethodService
 import android.view.View
+import com.goovat.gvtboard.keyboard.view.KeyboardKeyDefinition
 import com.goovat.gvtboard.keyboard.view.KeyboardView
+import com.goovat.gvtboard.keyboard.view.KeyboardLongPressHandler
 
 class GVTboardInputMethodService : InputMethodService() {
 
@@ -12,6 +14,11 @@ class GVTboardInputMethodService : InputMethodService() {
         KeyboardInputLifecycle(keyboardController)
 
     private var keyboardView: KeyboardView? = null
+
+    private val longPressHandler =
+        KeyboardLongPressHandler { action ->
+            dispatchKeyAction(action)
+        }
 
     override fun onStartInput(
         attribute: android.view.inputmethod.EditorInfo?,
@@ -44,6 +51,9 @@ class GVTboardInputMethodService : InputMethodService() {
                 ) {
                     keyboardView?.render()
                 }
+            },
+            onLongPress = { keyDefinition ->
+                longPressHandler.handle(keyDefinition)
             }
         ).also {
             keyboardView = it
