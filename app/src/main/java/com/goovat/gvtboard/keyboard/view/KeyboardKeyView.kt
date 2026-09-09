@@ -1,10 +1,11 @@
 package com.goovat.gvtboard.keyboard.view
 
+import android.content.Context
 import android.graphics.drawable.GradientDrawable
+import android.os.SystemClock
 import android.view.Gravity
 import android.view.MotionEvent
 import android.widget.Button
-import android.content.Context
 import com.goovat.gvtboard.keyboard.KeyDefinition
 
 class KeyboardKeyView(
@@ -15,19 +16,49 @@ class KeyboardKeyView(
     private val appearance: KeyboardKeyAppearance =
         KeyboardKeyAppearance(),
     private val longPressPolicy: KeyboardLongPressPolicy =
-        KeyboardLongPressPolicy()
+        KeyboardLongPressPolicy(),
+    private val repeatPolicy: KeyboardLongPressRepeatPolicy =
+        KeyboardLongPressRepeatPolicy(),
+    private val repeatableKeyPolicy: KeyboardRepeatableKeyPolicy =
+        KeyboardRepeatableKeyPolicy()
 ) : Button(context) {
 
     private val longPressDetector =
         KeyboardLongPressDetector(longPressPolicy)
 
+    private val repeater =
+        KeyboardLongPressRepeater(repeatPolicy)
+
     private val longPressRunnable = Runnable {
         if (
             longPressDetector.check(
-                android.os.SystemClock.uptimeMillis()
+                SystemClock.uptimeMillis()
             )
         ) {
             onLongPress(keyDefinition)
+
+            if (repeatableKeyPolicy.isRepeatable(keyDefinition)) {
+                repeater.start(SystemClock.uptimeMillis())
+                post(repeatRunnable)
+            }
+        }
+    }
+
+    private val repeatRunnable = object : Runnable {
+        override fun run() {
+            if (!repeater.isActive()) {
+                return
+            }
+
+            val now = SystemClock.uptimeMillis()
+
+            if (repeater.shouldRepeat(now)) {
+                onKeyAction(keyDefinition)
+            }
+
+            if (repeater.isActive()) {
+                postDelayed(this, repeatPolicy.repeatIntervalMs)
+            }
         }
     }
 
@@ -49,7 +80,7 @@ class KeyboardKeyView(
                     )
 
                     longPressDetector.pressDown(
-                        android.os.SystemClock.uptimeMillis()
+                        SystemClock.uptimeMillis()
                     )
 
                     postDelayed(
@@ -62,8 +93,11 @@ class KeyboardKeyView(
 
                 MotionEvent.ACTION_UP -> {
                     removeCallbacks(longPressRunnable)
+                    removeCallbacks(repeatRunnable)
 
                     val pressEvent = longPressDetector.release()
+
+                    repeater.stop()
 
                     background = createBackground(
                         appearance.normalFillColor()
@@ -78,7 +112,10 @@ class KeyboardKeyView(
 
                 MotionEvent.ACTION_CANCEL -> {
                     removeCallbacks(longPressRunnable)
+                    removeCallbacks(repeatRunnable)
+
                     longPressDetector.cancel()
+                    repeater.stop()
 
                     background = createBackground(
                         appearance.normalFillColor()
