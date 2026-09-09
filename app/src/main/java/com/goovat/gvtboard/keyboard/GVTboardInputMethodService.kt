@@ -2,7 +2,6 @@ package com.goovat.gvtboard.keyboard
 
 import android.inputmethodservice.InputMethodService
 import android.view.View
-import com.goovat.gvtboard.keyboard.view.KeyboardKeyDefinition
 import com.goovat.gvtboard.keyboard.view.KeyboardView
 import com.goovat.gvtboard.keyboard.view.KeyboardLongPressHandler
 
