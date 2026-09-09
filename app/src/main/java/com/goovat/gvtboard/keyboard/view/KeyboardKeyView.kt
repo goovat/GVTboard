@@ -1,8 +1,10 @@
 package com.goovat.gvtboard.keyboard.view
 
-import android.content.Context
+import android.graphics.drawable.GradientDrawable
 import android.view.Gravity
+import android.view.MotionEvent
 import android.widget.Button
+import android.content.Context
 import com.goovat.gvtboard.keyboard.KeyDefinition
 
 class KeyboardKeyView(
@@ -19,23 +21,31 @@ class KeyboardKeyView(
         isAllCaps = false
         textSize = 16f
 
-        background = appearance.normalBackground()
+        background = createBackground(
+            appearance.normalFillColor()
+        )
 
         setOnTouchListener { _, event ->
             when (event.action) {
-                android.view.MotionEvent.ACTION_DOWN -> {
-                    background = appearance.pressedBackground()
+                MotionEvent.ACTION_DOWN -> {
+                    background = createBackground(
+                        appearance.pressedFillColor()
+                    )
                     false
                 }
 
-                android.view.MotionEvent.ACTION_UP -> {
-                    background = appearance.normalBackground()
+                MotionEvent.ACTION_UP -> {
+                    background = createBackground(
+                        appearance.normalFillColor()
+                    )
                     performClick()
                     true
                 }
 
-                android.view.MotionEvent.ACTION_CANCEL -> {
-                    background = appearance.normalBackground()
+                MotionEvent.ACTION_CANCEL -> {
+                    background = createBackground(
+                        appearance.normalFillColor()
+                    )
                     true
                 }
 
@@ -47,4 +57,11 @@ class KeyboardKeyView(
             onKeyAction(keyDefinition)
         }
     }
+
+    private fun createBackground(fillColor: Int): GradientDrawable =
+        GradientDrawable().apply {
+            setColor(fillColor)
+            setStroke(1, appearance.strokeColor())
+            cornerRadius = appearance.cornerRadiusPx()
+        }
 }
