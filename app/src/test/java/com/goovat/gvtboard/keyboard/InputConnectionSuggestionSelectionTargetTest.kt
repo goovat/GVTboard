@@ -20,7 +20,7 @@ class InputConnectionSuggestionSelectionTargetTest {
                 true
             },
             commitText = { text, cursorPosition ->
-                committedText = text
+                committedText = text.toString()
                 committedCursorPosition = cursorPosition
             }
         )
@@ -55,7 +55,7 @@ class InputConnectionSuggestionSelectionTargetTest {
                 fallbackAfterLength = after
             },
             commitText = { text, _ ->
-                committedText = text
+                committedText = text.toString()
             }
         )
 
@@ -86,7 +86,7 @@ class InputConnectionSuggestionSelectionTargetTest {
                 true
             },
             commitText = { text, _ ->
-                committedText = text
+                committedText = text.toString()
             }
         )
 
