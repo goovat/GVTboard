@@ -7,7 +7,8 @@ class KeyboardLayoutSelector {
             SymbolLayout.standard().rows
         } else {
             KeyboardLayout.alphabetic(
-                isShifted = state.isShifted
+                isShifted = state.isShifted,
+                isCapsLocked = state.isCapsLocked
             ).rows
         }
 }

@@ -6,20 +6,22 @@ data class KeyboardLayout(
 
     companion object {
 
-        fun alphabetic(isShifted: Boolean = false): KeyboardLayout {
-            val letters = if (isShifted) {
+        fun alphabetic(isShifted: Boolean = false, isCapsLocked: Boolean = false): KeyboardLayout {
+            val uppercase = isShifted || isCapsLocked
+
+            val letters = if (uppercase) {
                 "QWERTYUIOP"
             } else {
                 "qwertyuiop"
             }
 
-            val homeLetters = if (isShifted) {
+            val homeLetters = if (uppercase) {
                 "ASDFGHJKL"
             } else {
                 "asdfghjkl"
             }
 
-            val bottomLetters = if (isShifted) {
+            val bottomLetters = if (uppercase) {
                 "ZXCVBNM"
             } else {
                 "zxcvbnm"
