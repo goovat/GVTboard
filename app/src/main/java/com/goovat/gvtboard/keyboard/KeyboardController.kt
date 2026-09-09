@@ -1,7 +1,8 @@
 package com.goovat.gvtboard.keyboard
 
 class KeyboardController(
-    private val eventHandler: KeyEventHandler = KeyEventHandler()
+    private val eventHandler: KeyEventHandler = KeyEventHandler(),
+    private val layoutSelector: KeyboardLayoutSelector = KeyboardLayoutSelector()
 ) {
 
     var state: KeyboardState = KeyboardState()
@@ -12,6 +13,9 @@ class KeyboardController(
         state = result.state
         return result
     }
+
+    fun currentLayout(): List<KeyboardRow> =
+        layoutSelector.select(state)
 
     fun reset() {
         state = KeyboardState()
