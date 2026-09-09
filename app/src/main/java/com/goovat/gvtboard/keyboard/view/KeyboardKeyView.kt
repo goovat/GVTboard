@@ -1,8 +1,6 @@
 package com.goovat.gvtboard.keyboard.view
 
 import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.GradientDrawable
 import android.view.Gravity
 import android.widget.Button
 import com.goovat.gvtboard.keyboard.KeyDefinition
@@ -10,7 +8,9 @@ import com.goovat.gvtboard.keyboard.KeyDefinition
 class KeyboardKeyView(
     context: Context,
     private val keyDefinition: KeyDefinition,
-    private val onKeyAction: (KeyDefinition) -> Unit
+    private val onKeyAction: (KeyDefinition) -> Unit,
+    private val appearance: KeyboardKeyAppearance =
+        KeyboardKeyAppearance()
 ) : Button(context) {
 
     init {
@@ -19,10 +19,28 @@ class KeyboardKeyView(
         isAllCaps = false
         textSize = 16f
 
-        background = GradientDrawable().apply {
-            setColor(Color.WHITE)
-            setStroke(1, Color.LTGRAY)
-            cornerRadius = 12f
+        background = appearance.normalBackground()
+
+        setOnTouchListener { _, event ->
+            when (event.action) {
+                android.view.MotionEvent.ACTION_DOWN -> {
+                    background = appearance.pressedBackground()
+                    false
+                }
+
+                android.view.MotionEvent.ACTION_UP -> {
+                    background = appearance.normalBackground()
+                    performClick()
+                    true
+                }
+
+                android.view.MotionEvent.ACTION_CANCEL -> {
+                    background = appearance.normalBackground()
+                    true
+                }
+
+                else -> false
+            }
         }
 
         setOnClickListener {
