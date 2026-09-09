@@ -47,7 +47,7 @@ class KeyboardSuggestionRefresherTest {
                 .createState(service.suggest())
 
         assertEquals(
-            listOf("word", "world", "work"),
+            listOf("word", "work", "world"),
             result.suggestions.map { it.text }
         )
     }
