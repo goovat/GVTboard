@@ -23,6 +23,23 @@ class KeyboardRepeatableKeyPolicyTest {
     }
 
     @Test
+    fun cursorNavigationKeys_areRepeatable() {
+        val cursorKeys = listOf(
+            KeyDefinition("←", KeyAction.CursorLeft),
+            KeyDefinition("→", KeyAction.CursorRight),
+            KeyDefinition("↑", KeyAction.CursorUp),
+            KeyDefinition("↓", KeyAction.CursorDown)
+        )
+
+        cursorKeys.forEach { key ->
+            assertTrue(
+                "Expected ${key.label} to be repeatable",
+                policy.isRepeatable(key)
+            )
+        }
+    }
+
+    @Test
     fun regularTextKey_isNotRepeatable() {
         assertFalse(
             policy.isRepeatable(

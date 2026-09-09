@@ -6,5 +6,13 @@ import com.goovat.gvtboard.keyboard.KeyDefinition
 class KeyboardRepeatableKeyPolicy {
 
     fun isRepeatable(key: KeyDefinition): Boolean =
-        key.action == KeyAction.Backspace
+        when (key.action) {
+            KeyAction.Backspace,
+            KeyAction.CursorLeft,
+            KeyAction.CursorRight,
+            KeyAction.CursorUp,
+            KeyAction.CursorDown -> true
+
+            else -> false
+        }
 }
