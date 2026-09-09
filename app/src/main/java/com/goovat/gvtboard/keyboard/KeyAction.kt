@@ -12,5 +12,7 @@ sealed interface KeyAction {
 
     data object Shift : KeyAction
 
+    data object CapsLock : KeyAction
+
     data object Symbols : KeyAction
 }

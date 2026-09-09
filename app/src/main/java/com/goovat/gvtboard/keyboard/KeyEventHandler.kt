@@ -13,6 +13,7 @@ class KeyEventHandler {
     ): KeyEventResult {
         val nextState = when (action) {
             KeyAction.Shift -> state.toggleShift()
+            KeyAction.CapsLock -> state.toggleCapsLock()
             KeyAction.Symbols -> state.toggleSymbols()
             else -> state
         }
