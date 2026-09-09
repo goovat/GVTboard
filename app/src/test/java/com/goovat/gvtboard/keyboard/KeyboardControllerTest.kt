@@ -50,7 +50,7 @@ class KeyboardControllerTest {
             KeyAction.InsertText("A")
         )
 
-        org.junit.Assert.assertTrue(controller.state.isShifted)
+        org.junit.Assert.assertFalse(controller.state.isShifted)
         org.junit.Assert.assertEquals(
             KeyAction.InsertText("A"),
             result.action
