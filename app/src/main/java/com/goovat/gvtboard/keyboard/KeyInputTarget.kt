@@ -15,4 +15,18 @@ interface KeyInputTarget {
     fun moveCursorUp()
 
     fun moveCursorDown()
+
+    fun selectCurrentWord()
+
+    fun selectAll()
+
+    fun cut()
+
+    fun copy()
+
+    fun paste()
+
+    fun undo()
+
+    fun redo()
 }
