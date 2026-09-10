@@ -54,13 +54,6 @@ data class KeyboardLayout(
                                 )
                             )
 
-                            add(
-                                KeyDefinition(
-                                    label = "Caps",
-                                    action = KeyAction.CapsLock
-                                )
-                            )
-
                             addAll(
                                 bottomLetters.map { letter ->
                                     KeyDefinition(
@@ -91,26 +84,6 @@ data class KeyboardLayout(
                             KeyDefinition(
                                 label = "Enter",
                                 action = KeyAction.Enter
-                            )
-                        )
-                    ),
-                    KeyboardRow(
-                        keys = listOf(
-                            KeyDefinition(
-                                label = "←",
-                                action = KeyAction.CursorLeft
-                            ),
-                            KeyDefinition(
-                                label = "↑",
-                                action = KeyAction.CursorUp
-                            ),
-                            KeyDefinition(
-                                label = "↓",
-                                action = KeyAction.CursorDown
-                            ),
-                            KeyDefinition(
-                                label = "→",
-                                action = KeyAction.CursorRight
                             )
                         )
                     )

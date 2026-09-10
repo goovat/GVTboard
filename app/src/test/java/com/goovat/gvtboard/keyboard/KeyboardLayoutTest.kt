@@ -6,7 +6,7 @@ class KeyboardLayoutTest {
     fun alphabeticLayoutHasFourRows() {
         val layout = KeyboardLayout.alphabetic()
 
-        org.junit.Assert.assertEquals(5, layout.rows.size)
+        org.junit.Assert.assertEquals(4, layout.rows.size)
     }
 
     @org.junit.Test
@@ -40,11 +40,10 @@ class KeyboardLayoutTest {
         val row = layout.rows[2]
 
         org.junit.Assert.assertEquals("Shift", row.keys.first().label)
-        org.junit.Assert.assertEquals("Caps", row.keys[1].label)
 
         org.junit.Assert.assertEquals(
             listOf("z", "x", "c", "v", "b", "n", "m"),
-            row.keys.subList(2, 9).map { it.label }
+            row.keys.subList(1, 8).map { it.label }
         )
         org.junit.Assert.assertEquals("Backspace", row.keys.last().label)
     }
@@ -60,29 +59,6 @@ class KeyboardLayoutTest {
             row.keys.map { it.label }
         )
     }
-
-    @org.junit.Test
-    fun cursorRowContainsFourNavigationKeys() {
-        val layout = KeyboardLayout.alphabetic()
-
-        val row = layout.rows[4]
-
-        org.junit.Assert.assertEquals(
-            listOf("←", "↑", "↓", "→"),
-            row.keys.map { it.label }
-        )
-
-        org.junit.Assert.assertEquals(
-            listOf(
-                KeyAction.CursorLeft,
-                KeyAction.CursorUp,
-                KeyAction.CursorDown,
-                KeyAction.CursorRight
-            ),
-            row.keys.map { it.action }
-        )
-    }
-
     @org.junit.Test
     fun letterKeysInsertTheirOwnLowercaseText() {
         val layout = KeyboardLayout.alphabetic()
