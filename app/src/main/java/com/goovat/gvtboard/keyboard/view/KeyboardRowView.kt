@@ -36,7 +36,11 @@ class KeyboardRowView(
                     context = context,
                     keyDefinition = key,
                     onKeyAction = onKeyAction,
-                    onLongPress = onLongPress                ),
+                    onLongPress = onLongPress,
+                    isActive =
+                        key.action == KeyAction.Shift &&
+                            keyboardState.isShifted
+                ),
                 LinearLayout.LayoutParams(
                     0,
                     dimensions.heightDp.dp(context),

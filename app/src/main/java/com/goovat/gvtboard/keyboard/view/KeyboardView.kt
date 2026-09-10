@@ -35,7 +35,9 @@ class KeyboardView(
                     context = context,
                     row = row,
                     onKeyAction = onKeyAction,
-                    onLongPress = onLongPress                ),
+                    onLongPress = onLongPress,
+                    keyboardState = controller.state
+                ),
                 LayoutParams(
                     LayoutParams.MATCH_PARENT,
                     LayoutParams.WRAP_CONTENT
