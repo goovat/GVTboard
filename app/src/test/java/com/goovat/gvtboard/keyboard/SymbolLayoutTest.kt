@@ -1,45 +1,63 @@
 package com.goovat.gvtboard.keyboard
 
+import org.junit.Assert.assertEquals
+import org.junit.Test
+
 class SymbolLayoutTest {
 
-    @org.junit.Test
-    fun standardLayoutHasThreeRows() {
+    @Test
+    fun standardLayoutHasFourRows() {
         val layout = SymbolLayout.standard()
 
-        org.junit.Assert.assertEquals(3, layout.rows.size)
+        assertEquals(4, layout.rows.size)
     }
 
-    @org.junit.Test
-    fun firstRowContainsCommonSymbols() {
+    @Test
+    fun firstRowContainsNumbers() {
         val layout = SymbolLayout.standard()
 
         val labels = layout.rows[0].keys.map { it.label }
 
-        org.junit.Assert.assertEquals(
+        assertEquals(
+            listOf(
+                "1", "2", "3", "4", "5",
+                "6", "7", "8", "9", "0"
+            ),
+            labels
+        )
+    }
+
+    @Test
+    fun secondRowContainsCommonSymbols() {
+        val layout = SymbolLayout.standard()
+
+        val labels = layout.rows[1].keys.map { it.label }
+
+        assertEquals(
             listOf("!", "@", "#", "$", "%", "^", "&", "*", "(", ")"),
             labels
         )
     }
 
-    @org.junit.Test
-    fun secondRowContainsOperatorSymbols() {
+    @Test
+    fun thirdRowContainsOperatorSymbols() {
         val layout = SymbolLayout.standard()
 
-        val labels = layout.rows[1].keys.map { it.label }
+        val labels = layout.rows[2].keys.map { it.label }
 
-        org.junit.Assert.assertEquals(
+        assertEquals(
             listOf("-", "_", "+", "=", "/", "\\", "|", "~"),
             labels
         )
     }
 
-    @org.junit.Test
-    fun thirdRowContainsPunctuationSymbols() {
+    @Test
+    fun fourthRowContainsPunctuationSymbols() {
         val layout = SymbolLayout.standard()
 
-        val labels = layout.rows[2].keys.map { it.label }
+        val labels = layout.rows[3].keys.map { it.label }
 
-        org.junit.Assert.assertEquals(
+        assertEquals(
             listOf(
                 "[", "]", "{", "}", "<", ">", ":",
                 ";", "'", "\"", ",", ".", "?"
@@ -48,32 +66,31 @@ class SymbolLayoutTest {
         )
     }
 
-    @org.junit.Test
+    @Test
     fun everySymbolKeyInsertsItsOwnSymbol() {
         val layout = SymbolLayout.standard()
 
-        val symbolKeys = layout.rows
+        layout.rows
             .flatMap { it.keys }
+            .forEach { key ->
+                val action = key.action as KeyAction.InsertText
 
-        symbolKeys.forEach { key ->
-            val action = key.action as KeyAction.InsertText
-
-            org.junit.Assert.assertEquals(
-                key.label,
-                action.text
-            )
-        }
+                assertEquals(
+                    key.label,
+                    action.text
+                )
+            }
     }
 
-    @org.junit.Test
-    fun standardLayoutContainsExactly31Symbols() {
+    @Test
+    fun standardLayoutContainsExactly41Keys() {
         val layout = SymbolLayout.standard()
 
-        val symbols = layout.rows
+        val labels = layout.rows
             .flatMap { it.keys }
             .map { it.label }
 
-        org.junit.Assert.assertEquals(31, symbols.size)
-        org.junit.Assert.assertEquals(31, symbols.toSet().size)
+        assertEquals(41, labels.size)
+        assertEquals(41, labels.toSet().size)
     }
 }

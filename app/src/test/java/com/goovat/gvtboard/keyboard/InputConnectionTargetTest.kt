@@ -30,6 +30,10 @@ class InputConnectionTargetTest {
                         true
                     }
 
+                    "getTextBeforeCursor" -> {
+                        "x"
+                    }
+
                     "deleteSurroundingText" -> {
                         fallbackDeleteCount++
                         true

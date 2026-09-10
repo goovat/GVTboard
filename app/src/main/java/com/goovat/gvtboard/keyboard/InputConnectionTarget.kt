@@ -25,12 +25,6 @@ class InputConnectionTarget(
             inputConnection.getTextBeforeCursor(2, 0)
 
         if (!before.isNullOrEmpty()) {
-            val codePoint =
-                Character.codePointBefore(
-                    before,
-                    before.length
-                )
-
             inputConnection.deleteSurroundingTextInCodePoints(
                 1,
                 0
