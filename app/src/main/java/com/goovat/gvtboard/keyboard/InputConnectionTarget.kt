@@ -25,7 +25,10 @@ class InputConnectionTarget(
 
         if (!before.isNullOrEmpty()) {
             val codePoint =
-                before.codePointBefore(before.length)
+                Character.codePointBefore(
+                    before,
+                    before.length
+                )
 
             val charCount =
                 Character.charCount(codePoint)
