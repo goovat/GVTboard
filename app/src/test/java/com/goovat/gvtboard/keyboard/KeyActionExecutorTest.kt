@@ -39,6 +39,33 @@ class KeyActionExecutorTest {
         override fun moveCursorDown() {
             cursorDownCount++
         }
+
+        override fun selectCurrentWord() {
+        }
+
+        override fun selectAll() {
+        }
+
+        override fun cut() {
+        }
+
+        override fun copy() {
+        }
+
+        override fun paste() {
+        }
+
+        override fun undo() {
+        }
+
+        override fun redo() {
+        }
+
+        override fun moveToBeginning() {
+        }
+
+        override fun moveToEnd() {
+        }
     }
 
     @org.junit.Test
