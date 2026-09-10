@@ -1,30 +1,26 @@
 package com.goovat.gvtboard.keyboard
 
-import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class KeyboardLayoutCapsLockKeyTest {
 
     @Test
-    fun alphabeticLayoutContainsCapsLockKey() {
+    fun alphabeticLayoutDoesNotContainCapsLockKey() {
         val layout = KeyboardLayout.alphabetic()
 
-        val capsLockKey = layout.rows[2].keys.firstOrNull {
-            it.action == KeyAction.CapsLock
-        }
+        val actions = layout.rows[2].keys.map { it.action }
 
-        assertTrue(capsLockKey != null)
-        assertEquals("Caps", capsLockKey?.label)
+        assertFalse(actions.contains(KeyAction.CapsLock))
     }
 
     @Test
-    fun capsLockKeyIsSeparateFromShiftKey() {
+    fun alphabeticLayoutKeepsShiftKey() {
         val layout = KeyboardLayout.alphabetic()
 
         val actions = layout.rows[2].keys.map { it.action }
 
         assertTrue(actions.contains(KeyAction.Shift))
-        assertTrue(actions.contains(KeyAction.CapsLock))
     }
 }
