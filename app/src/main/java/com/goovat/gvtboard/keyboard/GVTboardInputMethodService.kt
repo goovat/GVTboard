@@ -72,6 +72,9 @@ class GVTboardInputMethodService : InputMethodService() {
             keyboardView = keyboard,
             onSuggestionSelected = { suggestion ->
                 selectSuggestion(suggestion)
+            },
+            onEditingAction = { action ->
+                dispatchEditingAction(action)
             }
         ).also {
             keyboardContainerView = it
@@ -145,27 +148,50 @@ class GVTboardInputMethodService : InputMethodService() {
     fun dispatchKeyAction(
         action: KeyAction
     ): KeyEventResult? {
+
         val inputConnection =
             currentInputConnection
-                ?: return null
+
+        if (inputConnection != null) {
+            val target =
+                InputConnectionTarget(inputConnection)
+
+            val executor =
+                KeyActionExecutor(target)
+
+            val dispatcher =
+                KeyboardActionDispatcher(
+                    controller = keyboardController,
+                    executor = executor
+                )
+
+            dispatcher.dispatch(action)
+        } else {
+            keyboardController.handle(action)
+        }
+
+        keyboardView?.render()
+        refreshSuggestions()
+
+        return KeyEventResult(
+            state = keyboardController.state,
+            action = action
+        )
+    }
+
+    private fun dispatchEditingAction(
+        action: EditingAction
+    ) {
+        val inputConnection =
+            currentInputConnection
+                ?: return
 
         val target =
             InputConnectionTarget(inputConnection)
 
-        val executor =
-            KeyActionExecutor(target)
-
-        val dispatcher =
-            KeyboardActionDispatcher(
-                controller = keyboardController,
-                executor = executor
-            )
-
-        val result =
-            dispatcher.dispatch(action)
+        EditingActionExecutor(target)
+            .execute(action)
 
         refreshSuggestions()
-
-        return result
     }
 }

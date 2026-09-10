@@ -3,6 +3,7 @@ package com.goovat.gvtboard.keyboard.view
 import android.content.Context
 import android.graphics.Color
 import android.view.Gravity
+import android.widget.Button
 import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -11,8 +12,8 @@ import com.goovat.gvtboard.keyboard.SuggestionRowState
 
 class SuggestionRowView(
     context: Context,
-    private val onSuggestionSelected:
-        (SuggestionCandidate) -> Unit
+    private val onSuggestionSelected: (SuggestionCandidate) -> Unit,
+    private val onEditingRequested: () -> Unit
 ) : HorizontalScrollView(context) {
 
     private val container =
@@ -24,6 +25,7 @@ class SuggestionRowView(
     init {
         isHorizontalScrollBarEnabled = false
         addView(container)
+        render(SuggestionRowState(emptyList()))
     }
 
     fun render(state: SuggestionRowState) {
@@ -34,6 +36,10 @@ class SuggestionRowView(
                 createSuggestionView(suggestion)
             )
         }
+
+        container.addView(
+            createEditingButton()
+        )
     }
 
     private fun createSuggestionView(
@@ -56,7 +62,18 @@ class SuggestionRowView(
             }
         }
 
+    private fun createEditingButton(): Button =
+        Button(context).apply {
+            text = "✎"
+            contentDescription = "Text editing"
+            isAllCaps = false
+            textSize = 18f
+            setTextColor(Color.BLACK)
+            setOnClickListener {
+                onEditingRequested()
+            }
+        }
+
     private fun Int.dp(): Int =
-        (this * resources.displayMetrics.density)
-            .toInt()
+        (this * resources.displayMetrics.density).toInt()
 }

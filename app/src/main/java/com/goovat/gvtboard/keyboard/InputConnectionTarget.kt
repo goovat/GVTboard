@@ -1,6 +1,7 @@
 package com.goovat.gvtboard.keyboard
 
 import android.view.KeyEvent
+import android.view.inputmethod.ExtractedTextRequest
 import android.view.inputmethod.InputConnection
 
 class InputConnectionTarget(
@@ -41,109 +42,69 @@ class InputConnectionTarget(
     }
 
     override fun sendEnter() {
-        inputConnection.sendKeyEvent(
-            KeyEvent(
-                KeyEvent.ACTION_DOWN,
-                KeyEvent.KEYCODE_ENTER
-            )
-        )
-
-        inputConnection.sendKeyEvent(
-            KeyEvent(
-                KeyEvent.ACTION_UP,
-                KeyEvent.KEYCODE_ENTER
-            )
-        )
+        sendKey(KeyEvent.KEYCODE_ENTER)
     }
 
     override fun moveCursorLeft() {
-        inputConnection.sendKeyEvent(
-            KeyEvent(
-                KeyEvent.ACTION_DOWN,
-                KeyEvent.KEYCODE_DPAD_LEFT
-            )
-        )
-        inputConnection.sendKeyEvent(
-            KeyEvent(
-                KeyEvent.ACTION_UP,
-                KeyEvent.KEYCODE_DPAD_LEFT
-            )
-        )
+        sendKey(KeyEvent.KEYCODE_DPAD_LEFT)
     }
 
     override fun moveCursorRight() {
-        inputConnection.sendKeyEvent(
-            KeyEvent(
-                KeyEvent.ACTION_DOWN,
-                KeyEvent.KEYCODE_DPAD_RIGHT
-            )
-        )
-        inputConnection.sendKeyEvent(
-            KeyEvent(
-                KeyEvent.ACTION_UP,
-                KeyEvent.KEYCODE_DPAD_RIGHT
-            )
-        )
+        sendKey(KeyEvent.KEYCODE_DPAD_RIGHT)
     }
 
     override fun moveCursorUp() {
-        inputConnection.sendKeyEvent(
-            KeyEvent(
-                KeyEvent.ACTION_DOWN,
-                KeyEvent.KEYCODE_DPAD_UP
-            )
-        )
-        inputConnection.sendKeyEvent(
-            KeyEvent(
-                KeyEvent.ACTION_UP,
-                KeyEvent.KEYCODE_DPAD_UP
-            )
-        )
+        sendKey(KeyEvent.KEYCODE_DPAD_UP)
     }
 
     override fun moveCursorDown() {
-        inputConnection.sendKeyEvent(
-            KeyEvent(
-                KeyEvent.ACTION_DOWN,
-                KeyEvent.KEYCODE_DPAD_DOWN
-            )
-        )
-        inputConnection.sendKeyEvent(
-            KeyEvent(
-                KeyEvent.ACTION_UP,
-                KeyEvent.KEYCODE_DPAD_DOWN
-            )
-        )
+        sendKey(KeyEvent.KEYCODE_DPAD_DOWN)
     }
 
     override fun selectCurrentWord() {
-        val before =
-            inputConnection.getTextBeforeCursor(200, 0)
-                ?.toString()
-                ?: return
+        val extracted =
+            inputConnection.getExtractedText(
+                ExtractedTextRequest(),
+                0
+            ) ?: return
 
-        val after =
-            inputConnection.getTextAfterCursor(200, 0)
-                ?.toString()
-                ?: return
+        val text =
+            extracted.text?.toString() ?: return
 
-        val beforeBoundary =
-            before.indexOfLast { it.isWhitespace() } + 1
+        val cursor =
+            extracted.selectionStart
 
-        val afterBoundary =
-            after.indexOfFirst { it.isWhitespace() }
-                .let { if (it == -1) after.length else it }
+        if (cursor < 0 || cursor > text.length) {
+            return
+        }
 
-        val start =
-            before.length - beforeBoundary
+        if (text.isEmpty()) {
+            return
+        }
 
-        val end =
-            before.length + afterBoundary
+        var start = cursor
+        var end = cursor
 
-        inputConnection.setSelection(
-            start,
-            end
-        )
+        while (
+            start > 0 &&
+            !text[start - 1].isWhitespace()
+        ) {
+            start--
+        }
+
+        while (
+            end < text.length &&
+            !text[end].isWhitespace()
+        ) {
+            end++
+        }
+
+        if (start != end) {
+            inputConnection.setSelection(
+                start,
+                end
+            )
+        }
     }
 
     override fun selectAll() {
@@ -183,37 +144,44 @@ class InputConnectionTarget(
     }
 
     override fun moveToBeginning() {
-        val before =
-            inputConnection.getTextBeforeCursor(
-                Int.MAX_VALUE,
+        val extracted =
+            inputConnection.getExtractedText(
+                ExtractedTextRequest(),
                 0
-            )?.toString() ?: return
+            ) ?: return
 
-        inputConnection.setSelection(
-            0,
-            0
-        )
+        inputConnection.setSelection(0, 0)
     }
 
     override fun moveToEnd() {
-        val before =
-            inputConnection.getTextBeforeCursor(
-                Int.MAX_VALUE,
+        val extracted =
+            inputConnection.getExtractedText(
+                ExtractedTextRequest(),
                 0
-            )?.toString() ?: return
+            ) ?: return
 
-        val after =
-            inputConnection.getTextAfterCursor(
-                Int.MAX_VALUE,
-                0
-            )?.toString() ?: return
-
-        val position =
-            before.length + after.length
+        val length =
+            extracted.text?.length ?: return
 
         inputConnection.setSelection(
-            position,
-            position
+            length,
+            length
+        )
+    }
+
+    private fun sendKey(keyCode: Int) {
+        inputConnection.sendKeyEvent(
+            KeyEvent(
+                KeyEvent.ACTION_DOWN,
+                keyCode
+            )
+        )
+
+        inputConnection.sendKeyEvent(
+            KeyEvent(
+                KeyEvent.ACTION_UP,
+                keyCode
+            )
         )
     }
 }
