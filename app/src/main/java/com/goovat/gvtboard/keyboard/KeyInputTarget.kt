@@ -29,4 +29,6 @@ interface KeyInputTarget {
     fun undo()
 
     fun redo()
+    fun moveToBeginning()
+    fun moveToEnd()
 }
