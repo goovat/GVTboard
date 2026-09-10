@@ -5,12 +5,15 @@ import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
 import com.goovat.gvtboard.keyboard.EditingAction
+import com.goovat.gvtboard.keyboard.KeyboardMode
+import com.goovat.gvtboard.keyboard.KeyboardModeController
 import com.goovat.gvtboard.keyboard.SuggestionCandidate
 import com.goovat.gvtboard.keyboard.SuggestionRowState
 
 class KeyboardContainerView(
     context: Context,
     private val keyboardView: KeyboardView,
+    private val modeController: KeyboardModeController,
     onSuggestionSelected: (SuggestionCandidate) -> Unit,
     onEditingAction: (EditingAction) -> Unit
 ) : LinearLayout(context) {
@@ -20,7 +23,8 @@ class KeyboardContainerView(
             context = context,
             onSuggestionSelected = onSuggestionSelected,
             onEditingRequested = {
-                showEditingPanel()
+                modeController.enterEditingMode()
+                renderMode()
             }
         )
 
@@ -29,7 +33,8 @@ class KeyboardContainerView(
             context = context,
             onEditingAction = onEditingAction,
             onClose = {
-                showKeyboard()
+                modeController.exitEditingMode()
+                renderMode()
             }
         )
 
@@ -62,6 +67,8 @@ class KeyboardContainerView(
                 LayoutParams.WRAP_CONTENT
             )
         )
+
+        renderMode()
     }
 
     fun renderSuggestions(
@@ -70,13 +77,17 @@ class KeyboardContainerView(
         suggestionRow.render(state)
     }
 
-    private fun showEditingPanel() {
-        keyboardView.visibility = View.GONE
-        editingToolbar.visibility = View.VISIBLE
-    }
+    fun renderMode() {
+        when (modeController.mode) {
+            KeyboardMode.Keyboard -> {
+                editingToolbar.visibility = View.GONE
+                keyboardView.visibility = View.VISIBLE
+            }
 
-    private fun showKeyboard() {
-        editingToolbar.visibility = View.GONE
-        keyboardView.visibility = View.VISIBLE
+            KeyboardMode.Editing -> {
+                keyboardView.visibility = View.GONE
+                editingToolbar.visibility = View.VISIBLE
+            }
+        }
     }
 }

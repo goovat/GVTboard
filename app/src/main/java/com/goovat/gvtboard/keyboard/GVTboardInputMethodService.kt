@@ -11,6 +11,9 @@ class GVTboardInputMethodService : InputMethodService() {
 
     private val keyboardController = KeyboardController()
 
+    private val modeController =
+        KeyboardModeController()
+
     private val inputLifecycle =
         KeyboardInputLifecycle(keyboardController)
 
@@ -34,14 +37,18 @@ class GVTboardInputMethodService : InputMethodService() {
         super.onStartInput(attribute, restarting)
 
         inputLifecycle.startInput()
+        modeController.reset()
         keyboardView?.render()
+        keyboardContainerView?.renderMode()
         refreshSuggestions()
     }
 
     override fun onFinishInput() {
         inputLifecycle.finishInput()
 
+        modeController.reset()
         keyboardView?.render()
+        keyboardContainerView?.renderMode()
 
         keyboardContainerView?.renderSuggestions(
             SuggestionRowState()
@@ -70,6 +77,7 @@ class GVTboardInputMethodService : InputMethodService() {
         return KeyboardContainerView(
             context = this,
             keyboardView = keyboard,
+            modeController = modeController,
             onSuggestionSelected = { suggestion ->
                 selectSuggestion(suggestion)
             },
