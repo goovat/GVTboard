@@ -10,15 +10,7 @@ data class SymbolLayout(
             SymbolLayout(
                 rows = listOf(
                     KeyboardRow(
-                        keys = "1234567890".map { value ->
-                            KeyDefinition(
-                                label = value.toString(),
-                                action = KeyAction.InsertText(value.toString())
-                            )
-                        }
-                    ),
-                    KeyboardRow(
-                        keys = "@#$%^&*()".map { symbol ->
+                        keys = "!@#$%^&*()".map { symbol ->
                             KeyDefinition(
                                 label = symbol.toString(),
                                 action = KeyAction.InsertText(symbol.toString())

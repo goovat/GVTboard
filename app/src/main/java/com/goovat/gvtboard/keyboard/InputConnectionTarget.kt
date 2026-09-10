@@ -31,11 +31,8 @@ class InputConnectionTarget(
                     before.length
                 )
 
-            val charCount =
-                Character.charCount(codePoint)
-
-            inputConnection.deleteSurroundingText(
-                charCount,
+            inputConnection.deleteSurroundingTextInCodePoints(
+                1,
                 0
             )
         }
