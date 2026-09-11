@@ -17,10 +17,10 @@ class KeyboardView(
         orientation = VERTICAL
         gravity = Gravity.CENTER
         setPadding(
-            4.dp(),
-            4.dp(),
-            4.dp(),
-            4.dp()
+            2.dp(),
+            2.dp(),
+            2.dp(),
+            2.dp()
         )
 
         render()
